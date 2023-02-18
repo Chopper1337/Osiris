@@ -18,7 +18,7 @@ public:
     void handleToggle(Misc& misc, const OtherInterfaces& interfaces) noexcept;
     [[nodiscard]] bool isOpen() const noexcept { return open; }
 private:
-    bool open = true;
+    bool open = false;
 
     void updateColors(Config& config) const noexcept;
     void renderMenuBar(Misc& misc, inventory_changer::InventoryChanger& inventoryChanger, Glow& glow, Backtrack& backtrack, Visuals& visuals) noexcept;

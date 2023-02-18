@@ -293,6 +293,14 @@ void FASTCALL_CONV ClientModeHooks::overrideView(FASTCALL_THIS(csgo::ClientMode*
 {
     if (localPlayer && !localPlayer.get().isScoped())
         setup->fov += globalContext->features->visuals.fov();
+            if (localPlayer)
+    {
+        if (!localPlayer.get().isScoped())
+            setup->fov += globalContext->features->visuals.fov();
+
+        globalContext->config->totalFov = setup->fov;
+    }
+
     setup->farZ += globalContext->features->visuals.farZ() * 10;
     hooks->clientModeHooks.getOriginalOverrideView()(thisptr, setup);
 }
