@@ -125,6 +125,14 @@ void GUI::updateColors(Config& config) const noexcept
 
 void GUI::handleToggle(Misc& misc, const OtherInterfaces& interfaces) noexcept
 {
+    const auto esc = KeyBind::KeyCode::ESCAPE;
+    const static KeyBind closeMenuKeybind(esc);
+
+    if (closeMenuKeybind.isPressed() && !ImGui::IsAnyItemActive()) {
+        open = false;
+        interfaces.getInputSystem().resetInputState();
+    }
+
     if (misc.isMenuKeyPressed()) {
         open = !open;
         if (!open)
@@ -182,6 +190,8 @@ void GUI::renderAimbotWindow(Config& config, bool contentOnly) noexcept
     ImGui::Combo("", &config.aimbotKeyMode, "Hold\0Toggle\0");
     ImGui::PopItemWidth();
     ImGui::PopID();
+    ImGui::SameLine();
+    ImGuiCustom::colorPicker("Draw AimBot FOV", config.drawaimbotFov);
     ImGui::Separator();
     static int currentCategory{ 0 };
     ImGui::PushItemWidth(110.0f);

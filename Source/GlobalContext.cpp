@@ -241,6 +241,7 @@ void GlobalContext::renderFrame()
         features->visuals.hitMarker(nullptr, ImGui::GetBackgroundDrawList());
         features->visuals.drawMolotovHull(ImGui::GetBackgroundDrawList());
         features->misc.watermark();
+        features->aimbot.drawFov(ImGui::GetBackgroundDrawList(), getEngineInterfaces().getEngine(), *config, *memory);
 
         features->aimbot.updateInput(*config);
         features->visuals.updateInput();

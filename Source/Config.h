@@ -60,11 +60,14 @@ public:
         int minDamage{ 1 };
         bool killshot{ false };
         bool betweenShots{ true };
+        bool drawAimbotFov{ false };
     };
     std::array<Aimbot, 40> aimbot;
     bool aimbotOnKey{ false };
     KeyBind aimbotKey;
     int aimbotKeyMode{ 0 };
+    ColorToggle drawaimbotFov{ 88.0f, 68.0f, 0.0f, 0.0f };
+    float totalFov;
 
     struct Triggerbot {
         bool enabled = false;
@@ -117,7 +120,7 @@ public:
     };
    
     struct Style {
-        int menuStyle{ 0 };
+        int menuStyle{ 1 };
         int menuColors{ 0 };
     } style;
 

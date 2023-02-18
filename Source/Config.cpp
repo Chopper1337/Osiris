@@ -214,6 +214,7 @@ static void from_json(const json& j, Config::Aimbot& a)
     read(j, "Min damage", a.minDamage);
     read(j, "Killshot", a.killshot);
     read(j, "Between shots", a.betweenShots);
+    read(j, "Draw Aimbot FOV", a.drawAimbotFov);
 }
 
 static void from_json(const json& j, Config::Triggerbot& t)
@@ -316,6 +317,8 @@ void Config::load(Misc& misc, inventory_changer::InventoryChanger& inventoryChan
     read(j, "Aimbot On key", aimbotOnKey);
     read(j, "Aimbot Key", aimbotKey);
     read(j, "Aimbot Key mode", aimbotKeyMode);
+    read<value_t::object>(j, "Draw Aimbot FOV", drawaimbotFov);
+
 
     read(j, "Triggerbot", triggerbot);
     read(j, "Triggerbot Key", triggerbotHoldKey);
@@ -447,6 +450,7 @@ static void to_json(json& j, const Config::Aimbot& o, const Config::Aimbot& dumm
     WRITE("Min damage", minDamage);
     WRITE("Killshot", killshot);
     WRITE("Between shots", betweenShots);
+    WRITE("Draw Aimbot FOV", drawAimbotFov);
 }
 
 static void to_json(json& j, const Config::Triggerbot& o, const Config::Triggerbot& dummy = {})
@@ -537,6 +541,7 @@ void Config::save(Misc& misc, inventory_changer::InventoryChanger& inventoryChan
     j["Aimbot On key"] = aimbotOnKey;
     to_json(j["Aimbot Key"], aimbotKey, {});
     j["Aimbot Key mode"] = aimbotKeyMode;
+    j["Draw Aimbot FOV"] = drawaimbotFov;
 
     j["Triggerbot"] = triggerbot;
     to_json(j["Triggerbot Key"], triggerbotHoldKey, {});
