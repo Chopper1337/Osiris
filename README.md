@@ -123,6 +123,7 @@ Free open-source cross-platform cheat software for **Counter-Strike: Global Offe
     *   **Thirdperson distance** - camera distance in thirdperson view
     *   **View model FOV** - change view model FOV \[*-60*-*0*-*60*\] (0 - actual view model, negative values - decreased view model, positive values - increased view model)
     *   **FOV** - change view FOV \[*-60*-*0*-*60*\] (0 - actual view fov, negative values - decreased, positive values - increased)
+    *   **Aimbot FOV** - Draw the FOV of the Aimbot
     *   **Far Z** - far clipping range, useful after disabling fog on large maps (e.g `dz_sirocco`) to render distant buildings
     *   **Flash reduction** - reduces flashbang grenade effect \[*0*-*100*%\] (0 - full flash, 100 - no flash)
     *   **Brightness** - control game brightness \[*0.0*-*1.0*\]
