@@ -6,7 +6,7 @@
 <br>![Windows](https://github.com/danielkrupinski/Osiris/workflows/Windows/badge.svg?branch=master&event=push)
 ![Linux](https://github.com/danielkrupinski/Osiris/workflows/Linux/badge.svg?branch=master&event=push)
 
-Free open-source cross-platform cheat software for **Counter-Strike: Global Offensive** game. Designed as an internal cheat - [Dynamic-link library](https://en.wikipedia.org/wiki/Dynamic-link_library) (DLL) loadable into game process. Compatible with the Steam version of the game. Available for Windows and Linux systems.
+Free open-source cross-platform training software for **Counter-Strike: Global Offensive** game. Designed as an internal training software - [Dynamic-link library](https://en.wikipedia.org/wiki/Dynamic-link_library) (DLL) loadable into game process. Compatible with the Steam version of the game. Available for Windows and Linux systems.
 
 ## Features
 *   **Aimbot** - aim assistance
@@ -182,7 +182,7 @@ Free open-source cross-platform cheat software for **Counter-Strike: Global Offe
 
     *   **Spectator list** - show nicknames of players spectating you
 
-    *   **Watermark** - show cheat name in the upper-left screen corner and fps & ping in the upper-right corner
+    *   **Watermark** - show training software name in the upper-left screen corner and fps & ping in the upper-right corner
 
     *   **Offscreen Enemies** - draw circles on the screen indicating that there are enemies behind us
 
@@ -228,7 +228,7 @@ Free open-source cross-platform cheat software for **Counter-Strike: Global Offe
         *   **Griefing** - report for griefing
         *   **Abusive Communications** - report for abusive communications
 
-    *   **Unhook** - unload cheat
+    *   **Unhook** - unload training software
 
 *   **Config** - JSON-based configuration system
     *   **Create config** - create new configuration file
