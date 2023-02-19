@@ -67,6 +67,7 @@ public:
     void quickReload(csgo::UserCmd*) noexcept;
     bool changeName(bool, const char*, float) noexcept;
     void bunnyHop(csgo::UserCmd*) noexcept;
+    void edgeBug(csgo::UserCmd*, const csgo::EngineTrace& engineTrace) noexcept;
     void fakeBan(bool = false) noexcept;
     void nadePredict() noexcept;
     void fixTabletSignal() noexcept;

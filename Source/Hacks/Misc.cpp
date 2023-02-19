@@ -96,6 +96,7 @@ struct MiscConfig {
     bool fastDuck{ false };
     bool moonwalk{ false };
     bool edgejump{ false };
+    bool edgeBug{ false };
     bool slowwalk{ false };
     bool autoPistol{ false };
     bool autoReload{ false };
@@ -121,6 +122,7 @@ struct MiscConfig {
     PreserveKillfeed preserveKillfeed;
     char clanTag[16];
     KeyBind edgejumpkey;
+    KeyBind edgebugkey;
     KeyBind slowwalkKey;
     ColorToggleThickness noscopeCrosshair;
     ColorToggleThickness recoilCrosshair;
@@ -199,6 +201,85 @@ void Misc::edgejump(csgo::UserCmd* cmd) noexcept
 
     if ((EnginePrediction::getFlags() & 1) && !localPlayer.get().isOnGround())
         cmd->buttons |= csgo::UserCmd::IN_JUMP;
+}
+
+void Misc::edgeBug(csgo::UserCmd* cmd, const csgo::EngineTrace& engineTrace) noexcept{
+        if (!miscConfig.edgeBug || !localPlayer || !localPlayer.get().isAlive())
+        return;
+
+    const csgo::Entity localPlayer2 = localPlayer.get();
+    float max_radius = M_PI * 2;
+    float step = max_radius / 128;
+    float xThick = 23;
+
+    if (miscConfig.edgebugkey.isDown() && (localPlayer.get().flags() & 1))
+    {
+        csgo::Vector pos = localPlayer.get().origin();
+        for (float a = 0.f; a < max_radius; a += step)
+        {
+            csgo::Vector pt;
+            pt.x = (xThick * cos(a)) + pos.x;
+            pt.y = (xThick * sin(a)) + pos.y;
+            pt.z = pos.z;
+
+            csgo::Vector pt2 = pt;
+            pt2.z -= 6;
+
+            csgo::Trace trace;
+
+            csgo::TraceFilter flt = localPlayer2.getPOD();
+
+            //interfaces->engineTrace->traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+            engineTrace.traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+
+            if (trace.fraction != 1.0f && trace.fraction != 0.0f)
+            {
+                cmd->buttons |= csgo::UserCmd::IN_DUCK;
+            }
+        }
+        for (float a = 0.f; a < max_radius; a += step)
+        {
+            csgo::Vector pt;
+            pt.x = ((xThick - 2.f) * cos(a)) + pos.x;
+            pt.y = ((xThick - 2.f) * sin(a)) + pos.y;
+            pt.z = pos.z;
+
+            csgo::Vector pt2 = pt;
+            pt2.z -= 6;
+
+            csgo::Trace trace;
+
+            csgo::TraceFilter flt = localPlayer2.getPOD();
+            //interfaces->engineTrace->traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+            engineTrace.traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+
+            if (trace.fraction != 1.f && trace.fraction != 0.f)
+            {
+                cmd->buttons |= csgo::UserCmd::IN_DUCK;
+            }
+        }
+        for (float a = 0.f; a < max_radius; a += step)
+        {
+            csgo::Vector pt;
+            pt.x = ((xThick - 20.f) * cos(a)) + pos.x;
+            pt.y = ((xThick - 20.f) * sin(a)) + pos.y;
+            pt.z = pos.z;
+
+            csgo::Vector pt2 = pt;
+            pt2.z -= 6;
+
+            csgo::Trace trace;
+
+            csgo::TraceFilter flt = localPlayer2.getPOD();
+            //interfaces->engineTrace->traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+            engineTrace.traceRay({ pt, pt2 }, 0x1400B, flt, trace);
+
+            if (trace.fraction != 1.f && trace.fraction != 0.f)
+            {
+                cmd->buttons |= csgo::UserCmd::IN_DUCK;
+            }
+        }
+    }
 }
 
 void Misc::slowwalk(csgo::UserCmd* cmd) noexcept
@@ -1359,6 +1440,11 @@ void Misc::drawGUI(Visuals& visuals, inventory_changer::InventoryChanger& invent
     ImGui::Checkbox("Bunny hop", &miscConfig.bunnyHop);
     ImGui::Checkbox("Fast duck", &miscConfig.fastDuck);
     ImGui::Checkbox("Moonwalk", &miscConfig.moonwalk);
+    ImGui::Checkbox("Edge Bug", &miscConfig.edgeBug);
+    ImGui::SameLine();
+    ImGui::PushID("Edge Bug Key");
+    ImGui::hotkey("", miscConfig.edgebugkey);
+    ImGui::PopID();
     ImGui::Checkbox("Edge Jump", &miscConfig.edgejump);
     ImGui::SameLine();
     ImGui::PushID("Edge Jump Key");
@@ -1591,6 +1677,8 @@ static void from_json(const json& j, MiscConfig& m)
     read(j, "Animated clan tag", m.animatedClanTag);
     read(j, "Fast duck", m.fastDuck);
     read(j, "Moonwalk", m.moonwalk);
+    read(j, "Edge Bug", m.edgeBug);
+    read(j, "Edge Bug Key", m.edgebugkey);
     read(j, "Edge Jump", m.edgejump);
     read(j, "Edge Jump Key", m.edgejumpkey);
     read(j, "Slowwalk", m.slowwalk);
@@ -1725,6 +1813,8 @@ static void to_json(json& j, const MiscConfig& o)
 
     WRITE("Animated clan tag", animatedClanTag);
     WRITE("Fast duck", fastDuck);
+    WRITE("Edge Bug", edgeBug);
+    WRITE("Edge Bug Key", edgebugkey);
     WRITE("Moonwalk", moonwalk);
     WRITE("Edge Jump", edgejump);
     WRITE("Edge Jump Key", edgejumpkey);
