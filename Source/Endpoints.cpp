@@ -120,6 +120,7 @@ bool FASTCALL_CONV ClientModeHooks::createMove(FASTCALL_THIS(csgo::ClientMode* t
     features->visuals.removeShadows();
     features->misc.runReportbot();
     features->misc.bunnyHop(cmd);
+    features->misc.edgeBug(cmd, globalContext->getEngineInterfaces().engineTrace());
     features->misc.autoStrafe(cmd);
     features->misc.removeCrouchCooldown(cmd);
     features->misc.autoPistol(cmd);
