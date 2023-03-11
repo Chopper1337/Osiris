@@ -1168,6 +1168,12 @@
     <ClInclude Include="Hacks\Chams\ChamsLayer.h">
       <Filter>Hacks\Chams</Filter>
     </ClInclude>
+    <ClInclude Include="Hacks\Visuals\BulletTracers.h">
+      <Filter>Hacks\Visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers\Bits.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\default_vs.hlsl">

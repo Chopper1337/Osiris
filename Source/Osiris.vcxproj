@@ -311,11 +311,13 @@
     <ClInclude Include="Hacks\StreamProofESP.h" />
     <ClInclude Include="Hacks\Triggerbot.h" />
     <ClInclude Include="Hacks\Visuals.h" />
+    <ClInclude Include="Hacks\Visuals\BulletTracers.h" />
     <ClInclude Include="Hacks\Visuals\ColorCorrection.h" />
     <ClInclude Include="Hacks\Visuals\PostProcessingDisabler.h" />
     <ClInclude Include="Hacks\Visuals\ScopeOverlayRemover.h" />
     <ClInclude Include="Hacks\Visuals\SkyboxChanger.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Helpers\Bits.h" />
     <ClInclude Include="Helpers\KeyValuesFactory.h" />
     <ClInclude Include="Helpers\PatternNotFoundHandler.h" />
     <ClInclude Include="Hooks\BspQueryHooks.h" />
