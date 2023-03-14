@@ -337,6 +337,7 @@
     <ClInclude Include="Hooks\ViewRenderHooks.h" />
     <ClInclude Include="Hooks\VmtHook.h" />
     <ClInclude Include="Hooks\VmtSwap.h" />
+    <ClInclude Include="Hooks\WindowProcedureHook.h" />
     <ClInclude Include="HookType.h" />
     <ClInclude Include="imguiCustom.h" />
     <ClInclude Include="InputUtil.h" />
@@ -422,6 +423,7 @@
     <ClInclude Include="Platform\Windows\DynamicLibrarySection.h" />
     <ClInclude Include="Platform\Windows\DynamicLibraryView.h" />
     <ClInclude Include="Platform\Windows\DynamicLibraryWrapper.h" />
+    <ClInclude Include="Platform\Windows\PortableExecutable.h" />
     <ClInclude Include="ProtobufReader.h" />
     <ClInclude Include="Resources\avatar_ct.h" />
     <ClInclude Include="Resources\avatar_tt.h" />
