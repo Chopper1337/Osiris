@@ -3,8 +3,8 @@
 [![CS:GO](https://img.shields.io/badge/game-CS%3AGO-yellow.svg?style=plastic)](https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/) 
 [![License](https://img.shields.io/github/license/danielkrupinski/Osiris.svg?style=plastic)](LICENSE)
 [![Issues](https://img.shields.io/github/issues/danielkrupinski/Osiris.svg?style=plastic)](https://github.com/danielkrupinski/Osiris/issues)
-<br>![Windows](https://github.com/danielkrupinski/Osiris/workflows/Windows/badge.svg?branch=master&event=push)
-![Linux](https://github.com/danielkrupinski/Osiris/workflows/Linux/badge.svg?branch=master&event=push)
+<br>![Windows](https://github.com/Chopper1337/Osiris/workflows/Windows/badge.svg?branch=master&event=push)
+![Linux](https://github.com/Chopper1337/Osiris/workflows/Linux/badge.svg?branch=master&event=push)
 
 Free open-source cross-platform training software for **Counter-Strike: Global Offensive** game. Designed as an internal training software - [Dynamic-link library](https://en.wikipedia.org/wiki/Dynamic-link_library) (DLL) loadable into game process. Compatible with the Steam version of the game. Available for Windows and Linux systems.
 
