@@ -15,22 +15,6 @@ fi
 sudo rm -rf /tmp/dumps
 sudo mkdir -p --mode=000 /tmp/dumps
 
-function unload {
-    echo "Unloading cheat..."
-    echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-    if grep -q "$libname" "/proc/$csgo_pid/maps"; then
-        sudo $gdb -n -q -batch -ex "attach $csgo_pid" \
-            -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
-            -ex "set \$dlclose = (int(*)(void*)) dlclose" \
-            -ex "set \$library = \$dlopen(\"/usr/lib/$libname\", 6)" \
-            -ex "call \$dlclose(\$library)" \
-            -ex "call \$dlclose(\$library)" \
-            -ex "detach" \
-            -ex "quit"
-    fi
-    echo "Unloaded!"
-}
-
 function load {
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope > /dev/null
@@ -55,7 +39,7 @@ function load {
 function load_debug {
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-    sudo cp libOsiris.so /usr/lib/$libname
+    sudo cp ./build_debug/libOsiris.so /usr/lib/$libname
     sudo $gdb -n -q -batch \
         -ex "set auto-load safe-path /usr/lib:/usr/lib/" \
         -ex "attach $csgo_pid" \
@@ -78,8 +62,8 @@ function build {
 
 function build_debug {
     echo "Building cheat..."
-    mkdir -p build
-    cd build
+    mkdir -p build_debug
+    cd build_debug
     cmake -D CMAKE_BUILD_TYPE=Debug ..
     make -j $(nproc --all)
     cd ..
@@ -93,10 +77,6 @@ while [[ $# -gt 0 ]]
 do
 keys="$1"
 case $keys in
-    -u|--unload)
-        unload
-        shift
-        ;;
     -l|--load)
         load
         shift
@@ -124,7 +104,6 @@ Toolbox script for gamesneeze the beste lincuck cheat 2021
 =======================================================================
 | Argument             | Description                                  |
 | -------------------- | -------------------------------------------- |
-| -u (--unload)        | Unload the cheat from CS:GO if loaded.       |
 | -l (--load)          | Load/inject the cheat via gdb.               |
 | -ld (--load_debug)   | Load/inject the cheat and debug via gdb.     |
 | -b (--build)         | Build to the build/ dir.                     |
@@ -134,7 +113,7 @@ Toolbox script for gamesneeze the beste lincuck cheat 2021
 =======================================================================
 
 All args are executed in the order they are written in, for
-example, \"-p -u -b -l\" would update the cheat, then unload, then build it, and
+example, \"-p -b -l\" would update the cheat, build it, and
 then load it back into csgo.
 "
         exit
