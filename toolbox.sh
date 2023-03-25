@@ -18,7 +18,7 @@ sudo mkdir -p --mode=000 /tmp/dumps
 function load {
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope > /dev/null
-    sudo cp ./build/libOsiris.so /usr/lib/$libname
+    sudo cp ./build/Source/libOsiris.so /usr/lib/$libname
     gdbOut=$(
       sudo $gdb -n -q -batch \
       -ex "set auto-load safe-path /usr/lib/" \
@@ -39,7 +39,7 @@ function load {
 function load_debug {
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-    sudo cp ./build_debug/libOsiris.so /usr/lib/$libname
+    sudo cp ./build_debug/Source/libOsiris.so /usr/lib/$libname
     sudo $gdb -n -q -batch \
         -ex "set auto-load safe-path /usr/lib:/usr/lib/" \
         -ex "attach $csgo_pid" \
