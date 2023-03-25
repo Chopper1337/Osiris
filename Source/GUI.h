@@ -18,7 +18,7 @@ public:
     void handleToggle(Misc& misc, const OtherInterfaces& interfaces) noexcept;
     [[nodiscard]] bool isOpen() const noexcept { return open; }
 private:
-    bool open = true;
+    bool open = false;
 
     void updateColors(Config& config) const noexcept;
     void renderMenuBar(Features& features) noexcept;
