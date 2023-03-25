@@ -102,7 +102,7 @@ public:
     };
    
     struct Style {
-        int menuStyle{ 0 };
+        int menuStyle{ 1 };
         int menuColors{ 0 };
     } style;
 
