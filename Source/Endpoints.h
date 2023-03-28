@@ -2,7 +2,7 @@
 
 #include <Platform/Macros/IsPlatform.h>
 
-#if IS_WIN32()
+#if IS_WIN32() || IS_WIN64()
 #include "imgui/imgui_impl_dx9.h"
 #include "imgui/imgui_impl_win32.h"
 
@@ -29,8 +29,10 @@
 #include "Hooks/SvCheatsHooks.h"
 #include "Hooks/ViewRenderHooks.h"
 
+#include "CSGO/Constants/GameEventNames.h"
 #include "CSGO/Constants/UserMessages.h"
 #include "CSGO/ClientClass.h"
+#include "CSGO/GameEvent.h"
 #include "CSGO/GlobalVars.h"
 #include "CSGO/LocalPlayer.h"
 #include "CSGO/ModelRender.h"
@@ -44,41 +46,100 @@
 #include "Hacks/Triggerbot.h"
 #include "Hooks.h"
 
-void DefaultEventListener::fireGameEvent(csgo::GameEventPOD* eventPointer)
+void fireGameEvent(csgo::GameEventPOD* eventPointer)
 {
-    globalContext->fireGameEventCallback(eventPointer);
+    const auto event = csgo::GameEvent::from(retSpoofGadgets->client, eventPointer);
+
+    switch (fnv::hashRuntime(event.getName())) {
+    case fnv::hash(csgo::round_start):
+        GameData::clearProjectileList();
+        globalContext->features->misc.preserveKillfeed(true);
+        [[fallthrough]];
+    case fnv::hash(csgo::round_freeze_end):
+        globalContext->features->misc.purchaseList(&event);
+        break;
+    case fnv::hash(csgo::player_death):
+        globalContext->features->inventoryChanger.updateStatTrak(event);
+        globalContext->features->inventoryChanger.overrideHudIcon(*globalContext->memory, event);
+        globalContext->features->misc.killMessage(event);
+        globalContext->features->misc.killSound(event);
+        break;
+    case fnv::hash(csgo::player_hurt):
+        globalContext->features->misc.playHitSound(event);
+        globalContext->features->visuals.hitEffect(&event);
+        globalContext->features->visuals.hitMarker(&event);
+        break;
+    case fnv::hash(csgo::vote_cast):
+        globalContext->features->misc.voteRevealer(event);
+        break;
+    case fnv::hash(csgo::round_mvp):
+        globalContext->features->inventoryChanger.onRoundMVP(event);
+        break;
+    case fnv::hash(csgo::item_purchase):
+        globalContext->features->misc.purchaseList(&event);
+        break;
+    case fnv::hash(csgo::bullet_impact):
+        globalContext->features->visuals.bulletTracer(event);
+        break;
+    }
 }
 
-void EventListener::fireGameEvent(csgo::GameEventPOD* event)
+void DefaultEventListener::fireGameEvent(csgo::GameEventPOD* eventPointer)
 {
-    globalContext->fireGameEventCallback(event);
+    ::fireGameEvent(eventPointer);
+}
+
+void EventListener::fireGameEvent(csgo::GameEventPOD* eventPointer)
+{
+    ::fireGameEvent(eventPointer);
 }
 
 void CDECL_CONV viewModelSequence(csgo::recvProxyData* data, void* outStruct, void* arg3) noexcept
 {
-    globalContext->viewModelSequenceNetvarHook(data, outStruct, arg3);
+    const auto viewModel = csgo::Entity::from(retSpoofGadgets->client, static_cast<csgo::EntityPOD*>(outStruct));
+
+    if (localPlayer && ClientInterfaces{ retSpoofGadgets->client, *globalContext->clientInterfaces }.getEntityList().getEntityFromHandle(viewModel.owner()) == localPlayer.get().getPOD()) {
+        if (const auto weapon = csgo::Entity::from(retSpoofGadgets->client, ClientInterfaces{ retSpoofGadgets->client, *globalContext->clientInterfaces }.getEntityList().getEntityFromHandle(viewModel.weapon())); weapon.getPOD() != nullptr) {
+            if (globalContext->features->visuals.isDeagleSpinnerOn() && weapon.getNetworkable().getClientClass()->classId == ClassId::Deagle && data->value._int == 7)
+                data->value._int = 8;
+
+            globalContext->features->inventoryChanger.fixKnifeAnimation(weapon, data->value._int, *globalContext->randomGenerator);
+        }
+    }
+
+    proxyHooks.viewModelSequence.originalProxy(data, outStruct, arg3);
 }
 
 void CDECL_CONV spottedHook(csgo::recvProxyData* data, void* outStruct, void* arg3) noexcept
 {
-    globalContext->spottedHook(data, outStruct, arg3);
+    if (globalContext->features->misc.isRadarHackOn()) {
+        data->value._int = 1;
+
+        if (localPlayer) {
+            const auto entity = csgo::Entity::from(retSpoofGadgets->client, static_cast<csgo::EntityPOD*>(outStruct));
+            if (const auto index = localPlayer.get().getNetworkable().index(); index > 0 && index <= 32)
+                entity.spottedByMask() |= 1 << (index - 1);
+        }
+    }
+
+    proxyHooks.spotted.originalProxy(data, outStruct, arg3);
 }
 
-#if IS_WIN32()
+#if IS_WIN32() || IS_WIN64()
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT __stdcall WindowProcedureHook::wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    if (globalContext->state == GlobalContext::State::Initialized) {
+    if (globalContext->state == GlobalContextState::Initialized) {
         ImGui_ImplWin32_WndProcHandler(window, msg, wParam, lParam);
         globalContext->getOtherInterfaces().getInputSystem().enableInput(!gui->isOpen());
-    } else if (globalContext->state == GlobalContext::State::NotInitialized) {
-        globalContext->state = GlobalContext::State::Initializing;
+    } else if (globalContext->state == GlobalContextState::NotInitialized) {
+        globalContext->state = GlobalContextState::Initializing;
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(window);
         globalContext->initialize();
-        globalContext->state = GlobalContext::State::Initialized;
+        globalContext->state = GlobalContextState::Initialized;
     }
 
     return CallWindowProcW(hooks->windowProcedureHook.originalWndProc, window, msg, wParam, lParam);
@@ -86,15 +147,38 @@ LRESULT __stdcall WindowProcedureHook::wndProc(HWND window, UINT msg, WPARAM wPa
 
 HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params) noexcept
 {
-    return globalContext->resetHook(device, params);
+    ImGui_ImplDX9_InvalidateDeviceObjects();
+    globalContext->features->inventoryChanger.clearItemIconTextures();
+    GameData::clearTextures();
+    return hooks->originalReset(device, params);
 }
 
 HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND windowOverride, const RGNDATA* dirtyRegion) noexcept
 {
-    return globalContext->presentHook(device, src, dest, windowOverride, dirtyRegion);
+    [[maybe_unused]] static bool imguiInit{ ImGui_ImplDX9_Init(device) };
+
+    if (globalContext->config->loadScheduledFonts())
+        ImGui_ImplDX9_DestroyFontsTexture();
+
+    ImGui_ImplDX9_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+
+    globalContext->renderFrame();
+
+    if (device->BeginScene() == D3D_OK) {
+        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+        device->EndScene();
+    }
+
+    //
+    GameData::clearUnusedAvatars();
+    globalContext->features->inventoryChanger.clearUnusedItemIconTextures();
+    //
+
+    return hooks->originalPresent(device, src, dest, windowOverride, dirtyRegion);
 }
 
-#else
+#elif IS_LINUX()
 
 int pollEvent(SDL_Event* event) noexcept
 {
