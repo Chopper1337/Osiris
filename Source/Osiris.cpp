@@ -9,20 +9,24 @@
 
 #include "GlobalContext.h"
 #include "Hooks.h"
+#include "Platform/PlatformApi.h"
 
 namespace
 {
-    std::optional<GlobalContext> globalContext;
+    std::optional<GlobalContext<PlatformApi>> globalContext;
 }
 
 #include "Endpoints.h"
 
 void initializeGlobalContext()
 {
-    globalContext.emplace();
+    globalContext.emplace(PlatformApi{});
 }
 
-#if IS_WIN32()
+#include "GlobalContext.cpp"
+template class GlobalContext<PlatformApi>;
+
+#if IS_WIN32() || IS_WIN64()
 
 extern "C" BOOL WINAPI _CRT_INIT(HMODULE moduleHandle, DWORD reason, LPVOID reserved);
 
@@ -39,7 +43,7 @@ BOOL APIENTRY DllEntryPoint(HMODULE moduleHandle, DWORD reason, LPVOID reserved)
     return TRUE;
 }
 
-#else
+#elif IS_LINUX()
 
 void __attribute__((constructor)) DllEntryPoint()
 {
