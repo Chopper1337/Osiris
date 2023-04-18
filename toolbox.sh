@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 gdb="/bin/gdb" # For using a gdb build such as the cathook one (The one included)
 libname="libEGL_nvidia.so" # Pretend to be gamemode, change this to another lib that may be in /maps (if already using real gamemode, I'd suggest using libMangoHud.so)
