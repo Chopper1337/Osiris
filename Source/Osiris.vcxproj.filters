@@ -102,15 +102,15 @@
     <Filter Include="Hacks\Chams">
       <UniqueIdentifier>{4e0caedc-d0ab-48f2-8598-a22bbbc1bf6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BytePatterns">
+      <UniqueIdentifier>{725dc9cb-6df9-4b2c-8095-bb88f2061822}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hooks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
@@ -1165,9 +1165,6 @@
     <ClInclude Include="Platform\Windows\PebLdr.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\PlatformApi.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Pad.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -1176,6 +1173,15 @@
     </ClInclude>
     <ClInclude Include="Platform\Windows\WindowsDynamicLibrary.h">
       <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="BytePatterns\ClientPatternFinder.h">
+      <Filter>BytePatterns</Filter>
+    </ClInclude>
+    <ClInclude Include="BytePatterns\WindowsClientPatternFinder.h">
+      <Filter>BytePatterns</Filter>
+    </ClInclude>
+    <ClInclude Include="BytePatterns\LinuxClientPatternFinder.h">
+      <Filter>BytePatterns</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
