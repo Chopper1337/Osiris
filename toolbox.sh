@@ -52,16 +52,11 @@ function load_debug() {
 }
 
 function load_stealth() {
-    prefix="\e[34m\e[1mOsiris >\e[0m"
-    error_prefix="\e[91m\e[1mOsiris >\e[0m"
-    success_prefix="\e[32m\e[1mOsiris >\e[0m"
-
-    csgo=$(pidof csgo_linux64)
     library_path="/usr/lib/$libname"
     echo $library_path
 
     if [ -z "csgo" ]; then
-        echo -e "$error_prefix CSGO is not open!."
+        echo -e "CSGO is not open!."
         exit -1
     fi
 
@@ -84,7 +79,7 @@ function load_stealth() {
         sudo gdb -n -q -batch \
             -ex "set logging on" \
             -ex "set logging file /dev/null" \
-            -ex "attach $csgo" \
+            -ex "attach $csgo_pid" \
             -ex "set \$linkMapID = (long int)0" \
             -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
             -ex "set \$dlmopen = (void*(*)(long int, char*, int)) dlmopen" \
@@ -109,11 +104,11 @@ function load_stealth() {
 
     last_line="${input}"
 
-    if grep -q "$library_path" /proc/${csgo}/maps; then
-        echo -e "$success_prefix CSGO has been successfully injected."
+    if grep -q "$library_path" /proc/${csgo_pid}/maps; then
+        echo -e "CSGO has been successfully injected."
     else
         echo -e ${last_line}
-        echo -e "$error_prefix CSGO has failed to inject. See the above GDB Spew."
+        echo -e "CSGO has failed to inject. See the above GDB Spew."
     fi
 
     if [ -f "$(pwd)/gdb.txt" ]; then
