@@ -105,10 +105,10 @@ function load_stealth() {
     last_line="${input}"
 
     if grep -q "$library_path" /proc/${csgo_pid}/maps; then
-        echo -e "CSGO has been successfully injected."
+        echo -e "Osiris has been successfully injected."
     else
         echo -e ${last_line}
-        echo -e "CSGO has failed to inject. See the above GDB Spew."
+        echo -e "Osiris has failed to inject. See the above GDB Spew."
     fi
 
     if [ -f "$(pwd)/gdb.txt" ]; then
