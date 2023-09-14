@@ -15,7 +15,15 @@ fi
 sudo rm -rf /tmp/dumps
 sudo mkdir -p --mode=000 /tmp/dumps
 
+function csgo_running() {
+    if [[ -z $csgo_pid ]]; then
+        echo "CSGO is not running."
+        exit 1
+    fi
+}
+
 function load() {
+    csgo_running
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope >/dev/null
     sudo cp ./build/Source/libOsiris.so /usr/lib/$libname
@@ -37,6 +45,7 @@ function load() {
 }
 
 function load_debug() {
+    csgo_running
     echo "Loading cheat..."
     echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope
     sudo cp ./build_debug/Source/libOsiris.so /usr/lib/$libname
@@ -52,13 +61,9 @@ function load_debug() {
 }
 
 function load_stealth() {
+    csgo_running
     library_path="/usr/lib/$libname"
     echo $library_path
-
-    if [ -z "csgo" ]; then
-        echo -e "CSGO is not open!."
-        exit -1
-    fi
 
     sudo cp "./build/Source/libOsiris.so" "$library_path"
     sudo patchelf --set-soname "$library_path" "$library_path"
