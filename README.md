@@ -240,18 +240,7 @@ Free open-source cross-platform cheat software for **Counter-Strike: Global Offe
 
 ## Getting started
 
-### Prerequisites
-Microsoft Visual Studio 2019 16.10 (or newer), platform toolset v142 and Windows SDK 10.0.x.x are required in order to compile Osiris. If you don't have ones, you can download VS [here](https://visualstudio.microsoft.com/) (Windows SDK is installed during Visual Studio Setup).
-
 ### Downloading
-
-There are two options of downloading the source code:
-
-#### Without [git](https://git-scm.com)
-
-Choose this option if you want pure source and you're not going to contribute to the repo. Download size ~600 kB.
-
-To download source code this way [click here](https://github.com/danielkrupinski/Osiris/archive/master.zip).
 
 #### With [git](https://git-scm.com)
 
@@ -265,25 +254,23 @@ Open git command prompt and enter following command:
 
 ### Compiling from source
 
-<details>
-
-<summary>Windows</summary>
-
-When you have equipped a copy of the source code, next step is opening **Osiris.sln** in Microsoft Visual Studio 2019.
-
-Then change build configuration to `Release | x86` and simply press **Build solution**.
-
-If everything went right you should receive `Osiris.dll`  binary file.
-
-</details>
-
-<details>
-
-<summary>Linux</summary>
-
 Install dependencies:
 
-    sudo apt-get update && sudo apt-get install -y libsdl2-dev libfreetype-dev
+Debian / Ubuntu / Pop OS / Linux Mint required packages:
+
+    sudo apt install -y libsdl2-dev cmake git gcc-10 g++-10 gdb clang
+
+Arch / Manjaro required packages:
+
+    sudo pacman -S --needed base-devel git cmake gdb sdl2 clang
+
+Fedora required packages:
+
+    sudo dnf install gcc-g++ gdb SDL2-devel cmake git clang
+
+OpenSUSE required packages:
+
+    sudo zypper install gcc gdb SDL2-devel cmake git llvm-clang llvm-gold
 
 Configure with CMake:
 
@@ -293,31 +280,27 @@ Instead of g++-11 you can use g++-12, clang++-13, clang++-14, clang++-15.
 
 Build:
 
-    cmake --build build -j $(nproc --all)
+    ./toolbox.sh -b
 
 After following these steps you should receive `libOsiris.so` file in `build` directory.
 
-</details>
-
 ### Loading / Injecting into game process
-
-<details>
-
-<summary>Windows</summary>
-
-Open your favorite [DLL injector](https://en.wikipedia.org/wiki/DLL_injection) and just inject `Osiris.dll` into `csgo.exe` process.
-
-When injected, menu is openable under `INSERT` key.
-
-</details>
-
-<details>
 
 <summary>Linux</summary>
 
-You can run the following script in the directory containing `libOsiris.so`:
+Use the included `toolbox.sh` script to build and load the cheat with
+
+    ./toolbox.sh -l
+
+<details>
+<summary>Alternative method</summary>
+Please note that this method makes no attempt to hide `libOsiris.so`.
+
+You can run the following command in the directory containing `libOsiris.so`:
 
     sudo gdb -batch-silent -p $(pidof csgo_linux64) -ex "call (void*)__libc_dlopen_mode(\"$PWD/libOsiris.so\", 2)"
+
+</details>
 
 </details>
 
@@ -330,7 +313,7 @@ If your CPU supports AVX / AVX2 / AVX-512 instruction set, you can enable it in 
 Press <kbd>INSERT</kbd> while focused on CS:GO window.
 
 ### Where is my config file saved?
-Configuration files are saved inside `Osiris` folder in your `Documents` folder (`%USERPROFILE%\Documents\Osiris`). The config is in human readable format and can be edited (e.g, using notepad). Sometimes after updates configuration file needs to be deleted and recreated.
+Configuration files are saved inside `Osiris` folder in your user's home folder (`~/home/Osiris/`). The config is in human readable format and can be edited (e.g, using notepad). Sometimes after updates configuration file needs to be deleted and recreated.
 
 ### What hooking methods Osiris uses?
 Currently implemented hooking methods are:
