@@ -679,9 +679,6 @@
     <ClInclude Include="Utils\FlagsBuilder.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\TypeHint.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Interfaces\InterfaceFinder.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -1222,9 +1219,6 @@
     <ClInclude Include="MemoryAllocation\FreeMemoryRegion.h">
       <Filter>MemoryAllocation</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryAllocation\FreeMemoryRegionFinder.h">
-      <Filter>MemoryAllocation</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryAllocation\FreeMemoryRegionList.h">
       <Filter>MemoryAllocation</Filter>
     </ClInclude>
@@ -1269,6 +1263,9 @@
     </ClInclude>
     <ClInclude Include="MemoryAllocation\MemoryAllocatorBase.h">
       <Filter>MemoryAllocation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\GenericFunctionPointer.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

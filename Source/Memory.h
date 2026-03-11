@@ -19,7 +19,6 @@
 #include "Utils/SafeAddress.h"
 #include "RetSpoof/RetSpoofGadgets.h"
 #include "MemorySearch/PatternFinder.h"
-#include "Utils/TypeHint.h"
 
 #include "Platform/DynamicLibrary.h"
 #include "Platform/Macros/CallingConventions.h"
@@ -189,8 +188,8 @@ inline Memory::Memory(const ClientPatternFinder& clientPatternFinder, const Engi
     const DynamicLibrary gameOverlayRenderer{ "gameoverlayrenderer.dll" };
 
     PatternNotFoundHandler patternNotFoundHandler;
-    present = PatternFinder{ gameOverlayRenderer.getCodeSection().raw(), patternNotFoundHandler}("FF 15 ? ? ? ? 8B F0 85 FF"_pat).add(2).as<std::uintptr_t>();
-    reset = PatternFinder{ gameOverlayRenderer.getCodeSection().raw(), patternNotFoundHandler }("C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B D8"_pat).add(9).as<std::uintptr_t>();
+    present = PatternFinder{ gameOverlayRenderer.getCodeSection().raw(), patternNotFoundHandler}("8B 4D ? A1 ? ? ? ? 51 FF"_pat).add(4).as<std::uintptr_t>();
+    reset = PatternFinder{ gameOverlayRenderer.getCodeSection().raw(), patternNotFoundHandler }("E8 ? ? ? ? A1 ? ? ? ? 57 53 C7"_pat).add(6).as<std::uintptr_t>();
 
     clientMode = **reinterpret_cast<csgo::ClientMode***>((*reinterpret_cast<uintptr_t**>(clientInterface))[10] + 5);
     input = *reinterpret_cast<csgo::Input**>((*reinterpret_cast<uintptr_t**>(clientInterface))[16] + 1);
@@ -205,7 +204,7 @@ inline Memory::Memory(const ClientPatternFinder& clientPatternFinder, const Engi
 #elif IS_LINUX()
     conColorMsg = tier0.getFunctionAddress("_Z11ConColorMsgRK5ColorPKcz").template as<decltype(conColorMsg)>();
 
-    globalVars = SafeAddress{ (*reinterpret_cast<std::uintptr_t***>(clientInterface))[11] + 16 }.abs().deref().as<csgo::GlobalVars*>();
+    globalVars = SafeAddress{ (*reinterpret_cast<std::uintptr_t***>(clientInterface))[11] + 2 }.abs().deref().as<csgo::GlobalVars*>();
     clientMode = SafeAddress{ (*reinterpret_cast<uintptr_t***>(clientInterface))[10] }.add(12).abs().add(4).abs().deref().as<decltype(clientMode)>();
     input = SafeAddress{ (*reinterpret_cast<uintptr_t***>(clientInterface))[16] }.add(3).abs().deref().as<csgo::Input*>();
 

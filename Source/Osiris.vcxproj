@@ -404,7 +404,6 @@
     <ClInclude Include="JsonForward.h" />
     <ClInclude Include="MemoryAllocation\FixedAllocator.h" />
     <ClInclude Include="MemoryAllocation\FreeMemoryRegion.h" />
-    <ClInclude Include="MemoryAllocation\FreeMemoryRegionFinder.h" />
     <ClInclude Include="MemoryAllocation\FreeMemoryRegionList.h" />
     <ClInclude Include="MemoryAllocation\MemoryAllocator.h" />
     <ClInclude Include="MemoryAllocation\MemoryAllocatorBase.h" />
@@ -459,6 +458,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utils\CharUtils.h" />
     <ClInclude Include="Utils\FlagsBuilder.h" />
+    <ClInclude Include="Utils\GenericFunctionPointer.h" />
     <ClInclude Include="Utils\HexChars.h" />
     <ClInclude Include="Utils\MemorySection.h" />
     <ClInclude Include="Utils\Pad.h" />
@@ -467,7 +467,6 @@
     <ClInclude Include="Utils\SafeAddress.h" />
     <ClInclude Include="Utils\SpanSlice.h" />
     <ClInclude Include="Utils\StringBuilder.h" />
-    <ClInclude Include="Utils\TypeHint.h" />
     <ClInclude Include="Verification\Verifier.h" />
     <ClInclude Include="Verification\VerifyMacros.h" />
     <ClInclude Include="Vmt\VmtCopy.h" />
